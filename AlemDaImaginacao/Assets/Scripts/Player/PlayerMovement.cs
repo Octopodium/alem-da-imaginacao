@@ -1,0 +1,103 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+[RequireComponent(typeof(Rigidbody))]
+public class PlayerMovement : MonoBehaviour
+{
+    #region Declaration
+    public static PlayerMovement instance { get; private set; }
+
+    public float speed = 8f;
+    public float jumpForce = 10f;
+    
+    private Vector3 movement;
+    public Vector2 movementDirection;
+    public Vector2 direction;
+    private Rigidbody rb;
+    
+    private Actions actions => GameManager.instance.actions;
+
+    private bool isGrounded;
+    private bool isJumping;
+
+    [Header("Ground Check")]
+    [SerializeField] private Transform _groundCheckPoint; 
+    [SerializeField] private float _groundCheckSize = 0.2f; 
+    [SerializeField] private LayerMask groundLayer;
+
+    private float coyoteTime = 0.2f;
+    private float coyoteTimer;
+
+    #endregion
+
+    void Start(){
+        if(instance == null){
+            instance = this;
+        }else{
+            Destroy(gameObject);
+            return;
+        }
+
+        rb = GetComponent<Rigidbody>();
+        
+        rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionZ;
+        
+        actions.Player.Move.performed += ctx => Move(ctx.ReadValue<Vector2>());
+        actions.Player.Move.canceled += ctx => Move(Vector2.zero);
+        actions.Player.Jump.performed += ctx => Jump();
+    }
+
+    void Update()
+    {
+        if(isGrounded){
+            coyoteTimer = coyoteTime;
+        }else{
+            coyoteTimer -= Time.deltaTime;
+        }
+
+        Movement();
+        
+        GroundCheck();
+        
+        if(isGrounded && rb.linearVelocity.y <= 0){
+            isJumping = false;
+        }
+    }
+
+    public void Movement(){
+        if(movement.magnitude > 0){
+            Vector3 velocity = new Vector3(movement.x * speed, rb.linearVelocity.y, 0);
+            rb.linearVelocity = velocity;
+        }else{
+            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
+        }
+    }
+
+    public void Move(Vector2 dir){
+        movementDirection = dir;
+        
+        if(movementDirection.magnitude > 0f) direction = movementDirection.normalized;
+        movement = new Vector3(movementDirection.x, 0, 0);
+    }
+
+    public void Jump()
+    {
+        if((isGrounded || coyoteTimer > 0) && !isJumping){
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, 0);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            isJumping = true;
+            coyoteTimer = 0;
+        }
+    }
+
+    private void GroundCheck(){
+        isGrounded = Physics.CheckSphere(_groundCheckPoint.position, _groundCheckSize, groundLayer);
+    }
+
+    private void OnDrawGizmos(){
+        if(_groundCheckPoint != null){
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(_groundCheckPoint.position, _groundCheckSize);
+        }
+    }
+}
