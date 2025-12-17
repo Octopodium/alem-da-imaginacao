@@ -32,13 +32,15 @@ public class Idealizador : MonoBehaviour {
             ultimoIdeavelImaginado = null;
         }
 
-        ultimoIdeavelImaginado = ideavel;
 
         if (ideavel != null) {
-            ideavel.AtivarPrevisaoDeIdeia();
+            if (ideavel != ultimoIdeavelImaginado) ideavel.AtivarPrevisaoDeIdeia();
+            ultimoIdeavelImaginado = ideavel;
+
             return true;
         }
 
+        ultimoIdeavelImaginado = null;
         return false;
     }
 

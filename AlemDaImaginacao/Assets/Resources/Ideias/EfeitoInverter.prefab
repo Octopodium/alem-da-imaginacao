@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1276397055689735545}
   - component: {fileID: 3330189878093313984}
   m_Layer: 0
-  m_Name: EfeitoCor (para teste apenas)
+  m_Name: EfeitoInverter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
