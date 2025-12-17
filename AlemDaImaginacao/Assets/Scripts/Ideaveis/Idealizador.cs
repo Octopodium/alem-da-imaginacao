@@ -2,6 +2,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Idealizador : MonoBehaviour {
+    public bool idealizando { get{ return ideiaAtual != null;}}
+    public System.Action<IdeiaInfo> OnStartIdealizacao;
+    public System.Action<IdeiaInfo> OnEndIdealizacao;
+
+
+
     public LayerMask camadaDeIdealizacao;
     public float raycastDist = 100f;
     Camera mainCam;
@@ -15,6 +21,7 @@ public class Idealizador : MonoBehaviour {
 
     public void ComecarAImaginar(IdeiaUI ideia) {
         ideiaAtual = ideia;
+        OnStartIdealizacao?.Invoke(ideia.ideiaInfo);
     }
 
     public bool Imaginando(IdeiaUI ideia, Vector3 mousePos) {
@@ -43,12 +50,14 @@ public class Idealizador : MonoBehaviour {
 
         Ideavel ideavel = PegarIdeavelEm(mousePos);
         if (ideavel != null) {
-            ideavel.AplicarIdeia();
+            ideavel.AplicarIdeia(ideia.ideiaInfo);
             ideia.Gastar();
         } else {
             ideia.Resetar();
         }
 
+        OnEndIdealizacao?.Invoke(ideia.ideiaInfo);
+        
         ideiaAtual = null;
     }
 

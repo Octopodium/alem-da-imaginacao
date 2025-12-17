@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de0d104a4373fca43aa5f7e6819584ca, type: 3}
+  m_Name: Ideia_Cor
+  m_EditorClassIdentifier: Assembly-CSharp::IdeiaInfo
+  nome: Cor
+  sprite: {fileID: 21300000, guid: 5ff1fb764866c0140b52344735ceded4, type: 3}
+  cor: {r: 0.23930274, g: 0.8113208, b: 0, a: 1}
+  efeitoPrefab: {fileID: 6241433026971292099, guid: 4068206d22240734e952297f8b659ffb, type: 3}

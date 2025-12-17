@@ -3,27 +3,47 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class IdeiaUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
-    public Image image;
+    public IdeiaInfo ideiaInfo;
+    public Image imageFundo, imageIcone;
 
-    public float opacidadeNormal, opacidadeMovendo, opacidadeDesativado;
+    public float opacidadeMovendo = 0.6f, opacidadeDesativado = 0.2f;
+    float opacidadeNormal = 1.0f;
 
     Vector3 startDragPos;
     bool gastou = false;
 
+    void Start() {
+        Setup(ideiaInfo);
+    }
 
-    void MudarOpacidade(float v) {
-        if (image.color.a == v) return;
 
-        Color c = image.color;
+    public void Setup(IdeiaInfo ideiaInfo) {
+        this.ideiaInfo = ideiaInfo;
+
+        if (ideiaInfo == null) return;
+
+        imageFundo.color = ideiaInfo.cor;
+        opacidadeNormal = ideiaInfo.cor.a;
+
+        imageIcone.sprite = ideiaInfo.sprite;
+        imageIcone.gameObject.SetActive(imageIcone.sprite != null); 
+    }
+
+
+    void MudarOpacidade(Image img, float v) {
+        if (img.color.a == v) return;
+
+        Color c = img.color;
         c.a = v;
-        image.color = c;
+        img.color = c;
     }
 
     public void OnBeginDrag(PointerEventData pointerEventData) {
         if (gastou) return;
         startDragPos = transform.position;
-        image.raycastTarget = false;
-        MudarOpacidade(opacidadeMovendo);
+        imageFundo.raycastTarget = false;
+        MudarOpacidade(imageFundo, opacidadeMovendo);
+        MudarOpacidade(imageIcone, opacidadeMovendo);
         
         GameManager.instance.idealizador.ComecarAImaginar(this);
     }
@@ -34,8 +54,13 @@ public class IdeiaUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragH
         transform.position = pointerEventData.position;
         bool achouAlgo = GameManager.instance.idealizador.Imaginando(this, pointerEventData.position);
 
-        if (achouAlgo) MudarOpacidade(0.0f);
-        else MudarOpacidade(opacidadeMovendo);
+        if (achouAlgo) {
+            MudarOpacidade(imageFundo, 0.0f);
+            MudarOpacidade(imageIcone, 0.0f);
+        } else {
+            MudarOpacidade(imageFundo, opacidadeMovendo);
+            MudarOpacidade(imageIcone, opacidadeMovendo);
+        }
     }
 
     public void OnEndDrag(PointerEventData pointerEventData) {
@@ -47,14 +72,21 @@ public class IdeiaUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragH
 
     public void Resetar() {
         transform.position = startDragPos;
-        image.raycastTarget = true;
-        MudarOpacidade(opacidadeNormal);
+        imageFundo.raycastTarget = true;
+        MudarOpacidade(imageFundo, opacidadeNormal);
+        MudarOpacidade(imageIcone, opacidadeNormal);
     }
 
     public void Gastar() {
         transform.position = startDragPos;
-        image.raycastTarget = true;
+        imageFundo.raycastTarget = true;
         gastou = true;
-        MudarOpacidade(opacidadeDesativado);
+        MudarOpacidade(imageFundo, opacidadeDesativado);
+        MudarOpacidade(imageIcone, opacidadeDesativado);
+    }
+
+    public void Desgastar() {
+        gastou = false;
+        Resetar();
     }
 }
