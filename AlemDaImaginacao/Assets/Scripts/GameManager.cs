@@ -5,6 +5,8 @@ public class GameManager : MonoBehaviour {
 
     public Actions actions;
 
+    public Idealizador idealizador;
+
 
 
     public void Awake() {
