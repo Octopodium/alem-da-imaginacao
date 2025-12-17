@@ -42,9 +42,9 @@ public class PlayerMovement : MonoBehaviour
         
         rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionZ;
         
-        actions.Player.Move.performed += ctx => Move(ctx.ReadValue<Vector2>());
-        actions.Player.Move.canceled += ctx => Move(Vector2.zero);
-        actions.Player.Jump.performed += ctx => Jump();
+        actions.Player.Move.performed += OnMovePerformed;
+        actions.Player.Move.canceled += OnMoveCanceled;
+        actions.Player.Jump.performed += OnJumpPerformed;
     }
 
     void Update()
@@ -94,10 +94,30 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = Physics.CheckSphere(_groundCheckPoint.position, _groundCheckSize, groundLayer);
     }
 
+    private void OnMovePerformed(InputAction.CallbackContext ctx){
+        Move(ctx.ReadValue<Vector2>());
+    }
+
+    private void OnMoveCanceled(InputAction.CallbackContext ctx){
+        Move(Vector2.zero);
+    }
+
+    private void OnJumpPerformed(InputAction.CallbackContext ctx){
+        Jump();
+    }
+
     private void OnDrawGizmos(){
         if(_groundCheckPoint != null){
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(_groundCheckPoint.position, _groundCheckSize);
+        }
+    }
+
+    public void OnDisable(){
+        if(actions != null){
+            actions.Player.Move.performed -= OnMovePerformed;
+            actions.Player.Move.canceled -= OnMoveCanceled;
+            actions.Player.Jump.performed -= OnJumpPerformed;
         }
     }
 }
