@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
@@ -28,6 +29,11 @@ public class PlayerMovement : MonoBehaviour
     private float coyoteTime = 0.2f;
     private float coyoteTimer;
 
+    [Header("Ref Camera")]
+    public Transform meio;
+    public Transform frente;
+    public float tempoEasingDeGiroFrente = 0.1f;
+
     #endregion
 
     void Start(){
@@ -45,6 +51,9 @@ public class PlayerMovement : MonoBehaviour
         actions.Player.Move.performed += OnMovePerformed;
         actions.Player.Move.canceled += OnMoveCanceled;
         actions.Player.Jump.performed += OnJumpPerformed;
+
+
+        GameManager.instance.HandlePlayerSpawn(this);
     }
 
     void Update()
@@ -76,7 +85,11 @@ public class PlayerMovement : MonoBehaviour
     public void Move(Vector2 dir){
         movementDirection = dir;
         
-        if(movementDirection.magnitude > 0f) direction = movementDirection.normalized;
+        if(movementDirection.magnitude > 0f)  {
+            direction = movementDirection.normalized;
+            MudarDirecao(direction);
+        }
+
         movement = new Vector3(movementDirection.x, 0, 0);
     }
 
@@ -119,5 +132,32 @@ public class PlayerMovement : MonoBehaviour
             actions.Player.Move.canceled -= OnMoveCanceled;
             actions.Player.Jump.performed -= OnJumpPerformed;
         }
+    }
+
+
+    Coroutine c = null;
+    void MudarDirecao(Vector3 dir) {
+        if (meio.forward == dir.normalized) return;
+
+        if (c != null) StopCoroutine(c);
+        c = StartCoroutine(GirarMeioSuaveParaCamera(Mathf.Abs(meio.localEulerAngles.y) <= 90));
+    }
+
+    IEnumerator GirarMeioSuaveParaCamera(bool estaNaDireita = true) {
+        float rotacaoInicial = meio.localEulerAngles.y;
+        float rotacaoFinal = estaNaDireita ? 180f : 0f;
+        float tempoPassado = 0f;
+
+        while (tempoPassado < tempoEasingDeGiroFrente) {
+            tempoPassado += Time.fixedDeltaTime;
+            float yRot = Mathf.Lerp(rotacaoInicial, rotacaoFinal, tempoPassado / tempoEasingDeGiroFrente);
+            meio.localRotation = Quaternion.Euler(0,yRot,0);
+            yield return new WaitForFixedUpdate();
+        }
+
+        meio.localRotation = Quaternion.Euler(0,rotacaoFinal,0);
+
+
+        c = null;
     }
 }
