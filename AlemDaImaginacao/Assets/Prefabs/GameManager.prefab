@@ -48,6 +48,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   raycastDist: 100
+  ideiasPossuidas:
+  - {fileID: 11400000, guid: a87ff312f0ab2f444911628efdab94de, type: 2}
+  - {fileID: 11400000, guid: 25d13b8645e278a458897d7da00b2406, type: 2}
+  - {fileID: 11400000, guid: 65211fe5123a91e47aa4e9ae8c958e40, type: 2}
+  - {fileID: 11400000, guid: 3ada20d5ca81a8843b1d906e9ecb69d1, type: 2}
+  ideiaUIPrefab: {fileID: 1728639779337264622, guid: 3aeba7d22441f1d4cbe07b2f9d06b269, type: 3}
+  ideiasHolder: {fileID: 2984163106703491852}
 --- !u!1 &6146043687704149024
 GameObject:
   m_ObjectHideFlags: 0
@@ -192,6 +199,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 78a9bbea0053bb1418c4c857d412d81e, type: 3}
+--- !u!224 &2984163106703491852 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8203910965355000555, guid: 78a9bbea0053bb1418c4c857d412d81e, type: 3}
+  m_PrefabInstance: {fileID: 6391668927541932519}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &6945951128706406689 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4095809209261435078, guid: 78a9bbea0053bb1418c4c857d412d81e, type: 3}

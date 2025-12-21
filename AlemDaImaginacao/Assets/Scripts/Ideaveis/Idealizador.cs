@@ -1,11 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class Idealizador : MonoBehaviour {
     public bool idealizando { get{ return ideiaAtual != null;}}
     public System.Action<IdeiaInfo> OnStartIdealizacao;
     public System.Action<IdeiaInfo> OnEndIdealizacao;
-
 
 
     public LayerMask camadaDeIdealizacao;
@@ -17,6 +17,26 @@ public class Idealizador : MonoBehaviour {
 
     Ideavel ultimoIdeavelImaginado = null;
     Ideavel ideavelCached = null;
+
+    public List<IdeiaInfo> ideiasPossuidas = new List<IdeiaInfo>();
+
+    [Header("Idealizador UI")]
+    public GameObject ideiaUIPrefab;
+    public Transform ideiasHolder;
+
+    void Awake() {
+        Setup();
+    }
+
+    public void Setup() {
+        foreach (Transform fi in ideiasHolder) {
+            Destroy(fi.gameObject);
+        }
+
+        foreach (IdeiaInfo ideia in ideiasPossuidas) {
+            AdquirirIdeia(ideia, false);
+        }
+    }
 
 
     public void ComecarAImaginar(IdeiaUI ideia) {
@@ -87,4 +107,17 @@ public class Idealizador : MonoBehaviour {
     }
 
 
+    public void AdquirirIdeia(IdeiaInfo ideia, bool ignorarOsQueJaTem = true) {
+        if (ideiasPossuidas.Contains(ideia)) {
+            if (ignorarOsQueJaTem) return;
+        } else {
+            ideiasPossuidas.Add(ideia);
+        }
+
+        GameObject ideiaInstance = Instantiate(ideiaUIPrefab);
+        ideiaInstance.transform.SetParent(ideiasHolder);
+
+        IdeiaUI ideiaUI = ideiaInstance.GetComponent<IdeiaUI>();
+        ideiaUI.Setup(ideia);
+    }
 }
