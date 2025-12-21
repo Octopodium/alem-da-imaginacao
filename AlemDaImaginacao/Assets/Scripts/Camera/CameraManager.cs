@@ -36,7 +36,7 @@ public class CameraManager : MonoBehaviour {
     }
 
 
-    public void SetPlayerFollow(PlayerMovement player) {
+    public void SetPlayerFollow(Player player) {
         cameraDeGameplay.Follow = player.frente;
     }
 }

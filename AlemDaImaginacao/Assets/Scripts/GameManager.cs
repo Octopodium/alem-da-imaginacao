@@ -8,9 +8,6 @@ public class GameManager : MonoBehaviour {
     public Idealizador idealizador;
 
 
-    
-
-
     public void Awake() {
         if (instance == null) {
             instance = this;
@@ -23,6 +20,10 @@ public class GameManager : MonoBehaviour {
         actions.Enable();
     }
 
+    void Start() {
+        GetFaseAtual();
+    }
+
     Fase faseAtual;
     public Fase GetFaseAtual() {
         if (faseAtual != null) return faseAtual;
@@ -31,17 +32,22 @@ public class GameManager : MonoBehaviour {
         return faseAtual;
     }
 
+
+    public void ResetarFase() {
+        faseAtual.ResetarFase();
+    }
+
     
 
-    public PlayerMovement player {get; protected set;} = null;
-    System.Action<PlayerMovement> _onPlayerSpawn;
-    public void HandlePlayerSpawn(PlayerMovement player) {
+    public Player player {get; protected set;} = null;
+    System.Action<Player> _onPlayerSpawn;
+    public void HandlePlayerSpawn(Player player) {
         this.player = player;
         _onPlayerSpawn?.Invoke(player);
         _onPlayerSpawn = null;
     }
 
-    public void OnPlayerSpawn(System.Action<PlayerMovement> onSpawn) {
+    public void OnPlayerSpawn(System.Action<Player> onSpawn) {
         if (player != null) onSpawn?.Invoke(player);
         else _onPlayerSpawn += onSpawn;
     }

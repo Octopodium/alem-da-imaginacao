@@ -3,10 +3,10 @@ using UnityEngine.InputSystem;
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerMovement : MonoBehaviour
+public class Player : MonoBehaviour
 {
     #region Declaration
-    public static PlayerMovement instance { get; private set; }
+    public static Player instance { get; private set; }
 
     public float speed = 8f;
     public float jumpForce = 10f;
@@ -36,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
 
     #endregion
 
-    void Start(){
+    void Awake(){
         if(instance == null){
             instance = this;
         }else{
@@ -45,9 +45,10 @@ public class PlayerMovement : MonoBehaviour
         }
 
         rb = GetComponent<Rigidbody>();
-        
         rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionZ;
-        
+    }
+
+    void Start(){
         actions.Player.Move.performed += OnMovePerformed;
         actions.Player.Move.canceled += OnMoveCanceled;
         actions.Player.Jump.performed += OnJumpPerformed;
@@ -159,5 +160,9 @@ public class PlayerMovement : MonoBehaviour
 
 
         c = null;
+    }
+
+    public void Teletransportar(Vector3 pos) {
+        transform.position = pos;
     }
 }

@@ -1,11 +1,13 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
-public class Idealizador : MonoBehaviour {
+public class Idealizador : IResetavel {
     public bool idealizando { get{ return ideiaAtual != null;}}
     public System.Action<IdeiaInfo> OnStartIdealizacao;
     public System.Action<IdeiaInfo> OnEndIdealizacao;
+
 
 
     public LayerMask camadaDeIdealizacao;
@@ -23,6 +25,7 @@ public class Idealizador : MonoBehaviour {
     [Header("Idealizador UI")]
     public GameObject ideiaUIPrefab;
     public Transform ideiasHolder;
+    public RectTransform ideiasHolderLayout;
 
     void Awake() {
         Setup();
@@ -106,7 +109,6 @@ public class Idealizador : MonoBehaviour {
         return null;
     }
 
-
     public void AdquirirIdeia(IdeiaInfo ideia, bool ignorarOsQueJaTem = true) {
         if (ideiasPossuidas.Contains(ideia)) {
             if (ignorarOsQueJaTem) return;
@@ -119,5 +121,14 @@ public class Idealizador : MonoBehaviour {
 
         IdeiaUI ideiaUI = ideiaInstance.GetComponent<IdeiaUI>();
         ideiaUI.Setup(ideia);
+    }
+
+    public override void OnResetar() {
+        foreach (Transform fi in ideiasHolder) {
+            IdeiaUI ideiaUI = fi.GetComponent<IdeiaUI>();
+            if (ideiaUI != null) {
+                ideiaUI.Desgastar();
+            }
+        }
     }
 }

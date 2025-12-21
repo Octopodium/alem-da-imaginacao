@@ -11,6 +11,7 @@ public class IdeiaUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragH
 
     Vector3 startDragPos;
     bool gastou = false;
+    bool sendoArrastado = false;
 
     void Start() {
         Setup(ideiaInfo);
@@ -40,6 +41,7 @@ public class IdeiaUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragH
 
     public void OnBeginDrag(PointerEventData pointerEventData) {
         if (gastou) return;
+        sendoArrastado = true;
         startDragPos = transform.position;
         imageFundo.raycastTarget = false;
         MudarOpacidade(imageFundo, opacidadeMovendo);
@@ -67,11 +69,14 @@ public class IdeiaUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragH
         if (gastou) return;
 
         GameManager.instance.idealizador.EncerrarImaginacao(this, pointerEventData.position);
+        sendoArrastado = false;
     }
 
 
     public void Resetar() {
-        transform.position = startDragPos;
+        if (sendoArrastado)
+            transform.position = startDragPos;
+
         imageFundo.raycastTarget = true;
         MudarOpacidade(imageFundo, opacidadeNormal);
         MudarOpacidade(imageIcone, opacidadeNormal);

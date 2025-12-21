@@ -1,12 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class Ideavel : MonoBehaviour {
+public class Ideavel : IResetavel {
     public Rigidbody rb {get; protected set;}
 
     List<Ideia> ideias = new List<Ideia>();
 
-    public bool temGravidade = false;
+    [HideInInspector] public bool temGravidade = false;
     public float direcaoGravidade = 1f;
 
 
@@ -47,13 +47,12 @@ public class Ideavel : MonoBehaviour {
         ideia.AplicarEfeito();
     }
 
-    public void Resetar() {
+    public override void OnResetar() {
         foreach (Ideia ideia in ideias) {
             ideia.DesaplicarEfeito();
         }
 
         ideias.Clear();
     }
-
 
 }

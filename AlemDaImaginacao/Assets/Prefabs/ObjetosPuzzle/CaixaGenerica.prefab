@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06ed2c263a5dbc94daa149801edf7d7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Ideavel
-  temGravidade: 0
+  temGravidade: 1
   direcaoGravidade: 1
 --- !u!1 &7423155230632626510
 GameObject:
@@ -163,7 +163,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 016abbfc27f05a64eb15839e92d9b50e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
