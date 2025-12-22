@@ -21,6 +21,9 @@ public class Player : MonoBehaviour
     private bool isGrounded;
     private bool isJumping;
 
+    [Space(10),Header("Animation : ")]
+    [SerializeField] private JaneAnimator janeAnimator;
+
     [Header("Ground Check")]
     [SerializeField] private Transform _groundCheckPoint; 
     [SerializeField] private float _groundCheckSize = 0.2f; 
@@ -95,10 +98,13 @@ public class Player : MonoBehaviour
 
     public void Move(Vector2 dir){
         movementDirection = dir;
+        bool walking = movementDirection.magnitude > 0.0f;
         
-        if(movementDirection.magnitude > 0f)  {
+        janeAnimator.SetWalking(walking);
+        if(walking) {
             direction = movementDirection.normalized;
             MudarDirecao(direction);
+            janeAnimator.SetFacingSide(direction.x > 0);
         }
 
         movement = new Vector3(movementDirection.x, 0, 0);
