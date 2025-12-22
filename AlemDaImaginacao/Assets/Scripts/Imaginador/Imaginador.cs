@@ -40,6 +40,9 @@ public class Imaginador : MonoBehaviour {
 
     IEnumerator MoverAte(GameObject player, Vector3 posicaoFinal) {
         Vector3 posicaoInicial = player.transform.position;
+        
+        Player.instance.janeAnimator.SetFacingSide(posicaoFinal.x > posicaoInicial.x);
+        Player.instance.janeAnimator.SetWalking(true);
 
         float duracao = 1f;
         float tempoDecorrido = 0f;
@@ -50,8 +53,12 @@ public class Imaginador : MonoBehaviour {
             player.transform.position = new Vector3(player.transform.position.x, y, player.transform.position.z);
             
             tempoDecorrido += Time.fixedDeltaTime;
+            Player.instance.janeAnimator.SetWalking(true);
             yield return new WaitForFixedUpdate();
         }
+
+        Player.instance.janeAnimator.SetWalking(false);
+
     }
 
     IEnumerator AnimacaoDeImaginacao() {

@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
     private bool isJumping;
 
     [Space(10),Header("Animation : ")]
-    [SerializeField] private JaneAnimator janeAnimator;
+    public JaneAnimator janeAnimator;
 
     [Header("Ground Check")]
     [SerializeField] private Transform _groundCheckPoint; 
@@ -126,14 +126,17 @@ public class Player : MonoBehaviour
     }
 
     private void OnMovePerformed(InputAction.CallbackContext ctx){
+        if (!enabled) return;
         Move(ctx.ReadValue<Vector2>());
     }
 
     private void OnMoveCanceled(InputAction.CallbackContext ctx){
+        if (!enabled) return;
         Move(Vector2.zero);
     }
 
     private void OnJumpPerformed(InputAction.CallbackContext ctx){
+        if (!enabled) return;
         Jump();
     }
 

@@ -12,6 +12,9 @@ public class GameManager : MonoBehaviour {
     public Idealizador idealizador;
 
 
+    public System.Action OnPauseChange;
+
+
     public void Awake() {
         if (instance == null) {
             instance = this;
@@ -22,6 +25,10 @@ public class GameManager : MonoBehaviour {
 
         actions = new Actions();
         actions.Enable();
+
+        actions.UI.Pause.performed += ctx => {
+            TogglePause();
+        };
 
         DontDestroyOnLoad(gameObject);
     }
@@ -65,16 +72,19 @@ public class GameManager : MonoBehaviour {
     }
 
     IEnumerator PassarDeFaseCoroutine() {
+        Despausar();
+
         UIController.instance.FadeOut();
         yield return new WaitForSeconds(3f);
 
         Fase faseAtual = GetFaseAtual();
         FaseInfo proximaFaseInfo = faseAtual.proximaFase;
 
+        Despausar();
+
         if (proximaFaseInfo == null || proximaFaseInfo.cenaPath == "") {
             Debug.LogWarning("Nao ha proxima fase definida na fase " + faseAtual.name);
-            Destroy(gameObject);
-            SceneManager.LoadScene(menuScenePath);
+            VoltarAoMenu();
             yield break;
         }
 
@@ -86,5 +96,33 @@ public class GameManager : MonoBehaviour {
         Fase proximaFase = GetFaseAtual();
 
         UIController.instance.FadeIn();
+    }
+
+
+    public void Pausar() {
+        Time.timeScale = 0f;
+        OnPauseChange?.Invoke();
+    }
+
+    public void Despausar() {
+        Time.timeScale = 1f;
+        OnPauseChange?.Invoke();
+    }
+
+    public void TogglePause() {
+        if (Time.timeScale == 0f) {
+            Despausar();
+        } else {
+            Pausar();
+        }
+    }
+
+    public void VoltarAoMenu() {
+        SceneManager.LoadScene(menuScenePath);
+        Destroy(gameObject);
+    }
+
+    public void RecarregarFase() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
