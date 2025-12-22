@@ -122,6 +122,7 @@ public class Player : MonoBehaviour
 
     private void GroundCheck(){
         isGrounded = Physics.CheckSphere(_groundCheckPoint.position, _groundCheckSize, groundLayer);
+        janeAnimator.SetFalling(!isGrounded);
     }
 
     private void OnMovePerformed(InputAction.CallbackContext ctx){

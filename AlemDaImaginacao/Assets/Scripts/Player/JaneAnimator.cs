@@ -4,6 +4,7 @@ public class JaneAnimator : MonoBehaviour{
 
     [SerializeField] private Animator animator;
     private readonly int walkHash = Animator.StringToHash("Walk");
+    private readonly int fallHash = Animator.StringToHash("Fall");
 
 
     public void SetWalking(bool isWalking) => animator.SetBool(walkHash, isWalking);
@@ -14,5 +15,7 @@ public class JaneAnimator : MonoBehaviour{
         else scale.x = -1;
         transform.localScale = scale;
     }
+
+    public void SetFalling(bool falling) => animator.SetBool(fallHash, falling);
     
 }
