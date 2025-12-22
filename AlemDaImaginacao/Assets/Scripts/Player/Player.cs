@@ -49,12 +49,15 @@ public class Player : MonoBehaviour
     }
 
     void Start(){
-        actions.Player.Move.performed += OnMovePerformed;
-        actions.Player.Move.canceled += OnMoveCanceled;
-        actions.Player.Jump.performed += OnJumpPerformed;
-
-
         GameManager.instance.HandlePlayerSpawn(this);
+    }
+
+    public void OnEnable(){
+        if(actions != null){
+            actions.Player.Move.performed += OnMovePerformed;
+            actions.Player.Move.canceled += OnMoveCanceled;
+            actions.Player.Jump.performed += OnJumpPerformed;
+        }
     }
 
     void Update()
@@ -164,5 +167,10 @@ public class Player : MonoBehaviour
 
     public void Teletransportar(Vector3 pos) {
         transform.position = pos;
+    }
+
+    public void Parar() {
+        Move(Vector2.zero);
+        rb.linearVelocity = Vector3.zero;
     }
 }

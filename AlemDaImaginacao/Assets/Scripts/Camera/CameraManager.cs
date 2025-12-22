@@ -39,4 +39,8 @@ public class CameraManager : MonoBehaviour {
     public void SetPlayerFollow(Player player) {
         cameraDeGameplay.Follow = player.frente;
     }
+
+    public void DeixarCameraCerta(CinemachineCamera cam) {
+        cam.PreviousStateIsValid = false;
+    }
 }

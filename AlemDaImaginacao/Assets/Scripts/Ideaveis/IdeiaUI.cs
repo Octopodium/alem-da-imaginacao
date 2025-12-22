@@ -9,6 +9,8 @@ public class IdeiaUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragH
     public float opacidadeMovendo = 0.6f, opacidadeDesativado = 0.2f;
     float opacidadeNormal = 1.0f;
 
+    public bool meramenteVisual = false;
+
     Vector3 startDragPos;
     bool gastou = false;
     bool sendoArrastado = false;
@@ -40,7 +42,7 @@ public class IdeiaUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragH
     }
 
     public void OnBeginDrag(PointerEventData pointerEventData) {
-        if (gastou) return;
+        if (gastou || meramenteVisual) return;
         sendoArrastado = true;
         startDragPos = transform.position;
         imageFundo.raycastTarget = false;
@@ -51,7 +53,7 @@ public class IdeiaUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragH
     }
 
     public void OnDrag(PointerEventData pointerEventData) {
-        if (gastou) return;
+        if (gastou || meramenteVisual) return;
 
         transform.position = pointerEventData.position;
         bool achouAlgo = GameManager.instance.idealizador.Imaginando(this, pointerEventData.position);
@@ -66,7 +68,7 @@ public class IdeiaUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragH
     }
 
     public void OnEndDrag(PointerEventData pointerEventData) {
-        if (gastou) return;
+        if (gastou || meramenteVisual) return;
 
         GameManager.instance.idealizador.EncerrarImaginacao(this, pointerEventData.position);
         sendoArrastado = false;
@@ -74,6 +76,8 @@ public class IdeiaUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragH
 
 
     public void Resetar() {
+        if (meramenteVisual) return;
+
         if (sendoArrastado)
             transform.position = startDragPos;
 
@@ -83,6 +87,7 @@ public class IdeiaUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragH
     }
 
     public void Gastar() {
+        if (meramenteVisual) return;
         transform.position = startDragPos;
         imageFundo.raycastTarget = true;
         gastou = true;
@@ -91,6 +96,7 @@ public class IdeiaUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragH
     }
 
     public void Desgastar() {
+        if (meramenteVisual) return;
         gastou = false;
         Resetar();
     }
