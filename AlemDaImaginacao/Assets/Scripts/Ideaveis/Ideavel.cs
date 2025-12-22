@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class Ideavel : IResetavel {
+public class Ideavel : IResetavel, IRecebeTemplate {
     public Rigidbody rb {get; protected set;}
 
     List<Ideia> ideias = new List<Ideia>();
@@ -11,11 +11,26 @@ public class Ideavel : IResetavel {
 
 
 
+    public void RecebeTemplate(GameObject template) {
+        transform.localScale = template.transform.localScale;
+        transform.rotation = template.transform.rotation;
+
+        Ideavel ideavelTemplate = template.GetComponent<Ideavel>();
+
+        temGravidade = ideavelTemplate.temGravidade;
+
+        rb.isKinematic = ideavelTemplate.rb.isKinematic;
+        rb.mass = ideavelTemplate.rb.mass;
+
+        direcaoGravidade = ideavelTemplate.direcaoGravidade;
+    }
+
+
+
     void Awake() {
         rb = GetComponent<Rigidbody>();
         temGravidade = rb.useGravity;
         rb.useGravity = false;
-        direcaoGravidade = 1f;
     }
 
 

@@ -49,15 +49,22 @@ public class Player : MonoBehaviour
     }
 
     void Start(){
+        if(actions != null){
+            SetupInput();
+        }
+
         GameManager.instance.HandlePlayerSpawn(this);
     }
 
-    public void OnEnable(){
-        if(actions != null){
-            actions.Player.Move.performed += OnMovePerformed;
-            actions.Player.Move.canceled += OnMoveCanceled;
-            actions.Player.Jump.performed += OnJumpPerformed;
-        }
+    bool inputSetted = false;
+    void SetupInput() {
+        if (inputSetted) return;
+        inputSetted = true;
+
+        actions.Player.Move.performed += OnMovePerformed;
+        actions.Player.Move.canceled += OnMoveCanceled;
+        actions.Player.Jump.performed += OnJumpPerformed;
+
     }
 
     void Update()
@@ -130,11 +137,12 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void OnDisable(){
+    void OnDestroy(){
         if(actions != null){
             actions.Player.Move.performed -= OnMovePerformed;
             actions.Player.Move.canceled -= OnMoveCanceled;
             actions.Player.Jump.performed -= OnJumpPerformed;
+            inputSetted = false;
         }
     }
 
